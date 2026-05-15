@@ -1,0 +1,14 @@
+{
+  "plugin": "org.smartide.plugin.python",
+  "run": "python main.py",
+  "intelligence": {
+    ".json": {
+      "enabled": true,
+      "run": "vscode-json-language-server --stdio"
+    },
+    ".py": {
+      "enabled": true,
+      "run": "pylsp"
+    }
+  }
+}
