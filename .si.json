@@ -9,6 +9,10 @@
     ".py": {
       "enabled": true,
       "run": "pylsp"
+    },
+    ".md": {
+      "enabled": false,
+      "run": "marksman server"
     }
   }
 }
