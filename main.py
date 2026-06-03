@@ -1,20 +1,22 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
+from tkcalendar import DateEntry
 import json
 import os
-from datetime import datetime
 
 class BudgetApp:
-    def __init__(self, root):
+    def __init__(self, root:tk.Tk):
         self.root = root
         self.root.title("파이썬 가계부 (Budget Manager)")
-        self.root.geometry("600x450")
+        self.root.geometry("620x520")
         
         self.data_file = "data.json"
         self.records = self.load_data()
         
         self.setup_ui()
         self.update_treeview()
+
+        self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
 
     def load_data(self):
         if os.path.exists(self.data_file):
@@ -34,9 +36,8 @@ class BudgetApp:
         input_frame = tk.Frame(self.root, pady=10)
         input_frame.pack(fill="x")
         
-        tk.Label(input_frame, text="날짜 (YYYY-MM-DD):").grid(row=0, column=0)
-        self.date_entry = tk.Entry(input_frame)
-        self.date_entry.insert(0, datetime.now().strftime("%Y-%m-%d"))
+        tk.Label(input_frame, text="날짜 선택:").grid(row=0, column=0)
+        self.date_entry = DateEntry(input_frame, width=12, background='darkblue',foreground='white', borderwidth=2, date_pattern='yyyy-mm-dd', enable_wheel_on_calendar=True)
         self.date_entry.grid(row=0, column=1, padx=5)
         
         tk.Label(input_frame, text="항목:").grid(row=0, column=2)
@@ -52,6 +53,15 @@ class BudgetApp:
         tk.OptionMenu(input_frame, self.category_var, "수입", "지출").grid(row=1, column=3, padx=5)
         
         tk.Button(input_frame, text="추가", command=self.add_record, width=10).grid(row=0, column=4, rowspan=2, padx=10)
+
+        filter_frame=tk.Frame(self.root, padx=10, pady=5)
+        filter_frame.pack(fill="x")
+
+        tk.Label(filter_frame, text="필터").pack(side="left", padx=5)
+
+        self.filter_var = tk.StringVar(value="전체")
+        self.filter_combo = ttk.Combobox(filter_frame, textvariable=self.filter_var, values=["전체", "수입", "지출"], width=12, state="readonly")
+        self.filter_combo.pack(side="left", padx=5)
 
         # 리스트 프레임 (Treeview)
         list_frame = tk.Frame(self.root)
@@ -133,7 +143,10 @@ class BudgetApp:
                 
         self.balance_label.config(text= f"현재 잔액: {total_balance:,}원")
 
-if __name__ == "__main__":
-    root = tk.Tk()
-    app = BudgetApp(root)
-    root.mainloop()
+    def on_closing(self):
+        if messagebox.askokcancel("종료","가계부를 종료하시겠습니까?"):
+            self.root.destroy()
+
+root = tk.Tk()
+app = BudgetApp(root)
+root.mainloop()
