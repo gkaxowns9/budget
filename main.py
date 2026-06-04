@@ -54,15 +54,6 @@ class BudgetApp:
         
         tk.Button(input_frame, text="추가", command=self.add_record, width=10).grid(row=0, column=4, rowspan=2, padx=10)
 
-        filter_frame=tk.Frame(self.root, padx=10, pady=5)
-        filter_frame.pack(fill="x")
-
-        tk.Label(filter_frame, text="필터").pack(side="left", padx=5)
-
-        self.filter_var = tk.StringVar(value="전체")
-        self.filter_combo = ttk.Combobox(filter_frame, textvariable=self.filter_var, values=["전체", "수입", "지출"], width=12, state="readonly")
-        self.filter_combo.pack(side="left", padx=5)
-
         # 리스트 프레임 (Treeview)
         list_frame = tk.Frame(self.root)
         list_frame.pack(fill="both", expand=True, padx=10, pady=5)
